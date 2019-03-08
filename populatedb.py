@@ -4,23 +4,40 @@ cnx = mysql.connector.connect(user='admin', password='adminpassword',host='democ
 
 cursor = cnx.cursor()
 
-Tables = {}
+TABLES = {}
 
 TABLES['articles'] = (
-    "CREATE TABLE 'articles' ("
-    "  'id' int(8) NOT NULL AUTO_INCREMENT,"
-    "  'title' varchar(20) NOT NULL,"
-    "  'body' varchar(500),"
-    "  'author' varchar(24),"
-    "  PRIMARY KEY ('article_id')"
-    ") ENGINE=InnoDB")
+"""CREATE TABLE IF NOT EXISTS articles(
+    id INT(8) AUTO_INCREMENT,
+    title VARCHAR(20) NOT NULL,
+    body VARCHAR(255),
+    author VARCHAR(20),
+    PRIMARY KEY (id)
+)   ENGINE=INNODB;""")
 
 TABLES['users'] = (
-    "CREATE TABLE 'users' ("
-    "  'id' int(8) NOT NULL AUTO_INCREMENT,"
-    "  'username' varchar(20) NOT NULL,"
-    "  'name' varchar(24),"
-    "  'email' varchar(24),"
-    "  'password' varchar(24),"
-    "  PRIMARY KEY ('article_id')"
-    ") ENGINE=InnoDB")
+"""CREATE TABLE IF NOT EXISTS users(
+    id INT(8) NOT NULL AUTO_INCREMENT,
+    username VARCHAR(20) NOT NULL,
+    name VARCHAR(24),
+    email VARCHAR(24),
+    password VARCHAR(24),
+    PRIMARY KEY (id)
+)   ENGINE=INNODB;""")
+
+
+for table_name in TABLES:
+    table_description = TABLES[table_name]
+    try:
+        print("Creating table {}: ".format(table_name), end='')
+        cursor.execute(table_description)
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+            print("already exists.")
+        else:
+            print(err.msg)
+    else:
+        print("OK")
+
+cursor.close()
+cnx.close()
