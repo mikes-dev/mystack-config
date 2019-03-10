@@ -21,7 +21,7 @@ TABLES['users'] = (
     username VARCHAR(20) NOT NULL,
     name VARCHAR(24),
     email VARCHAR(24),
-    password VARCHAR(24),
+    pwd VARCHAR(24),
     PRIMARY KEY (id)
 )   ENGINE=INNODB;""")
 
